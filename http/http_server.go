@@ -15,6 +15,7 @@ func HandleHTTPServer(rootPath string) http.Handler {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/uploadApkFile", handler.UploadApkFileHandler).Methods("POST")
+	r.HandleFunc("/fetchPackTask", handler.HandlerGetPackageList).Methods("GET")
 
 	fs := http.FileServer(http.Dir(uploadPath))
 	//如果是http.hander的话 不用加{rest}
