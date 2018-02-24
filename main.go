@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"kkAndroidPackServer/config"
+	"kkAndroidPackServer/db/bean"
+	"kkAndroidPackServer/db/sql"
 	httpServer "kkAndroidPackServer/http"
-	"kkdownloader/db/sql"
 	"log"
 	"os"
 	"os/signal"
@@ -14,6 +15,8 @@ import (
 
 func main() {
 	mysql.InitMySQL()
+	apps := bean.FetchUnPackTask()
+	fmt.Println(apps)
 
 	var stopLock sync.Mutex
 	stop := false

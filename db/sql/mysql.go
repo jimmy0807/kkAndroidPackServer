@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"kkAndroidPackClient/config"
+	"kkAndroidPackServer/config"
 	"log"
 	"reflect"
 
