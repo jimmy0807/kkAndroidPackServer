@@ -3,9 +3,11 @@ package handler
 import (
 	"fmt"
 	"io/ioutil"
+	"kkAndroidPackServer/db/bean"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 const uploadPath = "./"
@@ -19,7 +21,7 @@ func UploadApkFileHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	*/
-
+	channelID, err := strconv.ParseInt(r.PostFormValue("channelID"), 10, 64)
 	fileName := r.PostFormValue("fileName")
 	r.ParseMultipartForm(32 << 20)
 	file, _, err := r.FormFile("uploadFile")
@@ -65,4 +67,13 @@ func UploadApkFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write([]byte("SUCCESS"))
+	updateTaskStatus(channelID, "success")
+}
+
+func updateTaskStatus(channelID int64, status string) {
+	tasks := bean.FetchPackageTaskbyID(channelID)
+	if len(tasks) == 1 {
+		task := tasks[0].(*bean.PackageApp)
+		task.Status = status
+	}
 }

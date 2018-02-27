@@ -15,6 +15,7 @@ type PackageApp struct {
 	Status            string `json:"status"`
 	ChannelName       string `json:"channel_name"`
 	ChannelID         int64  `json:"channel_id"`
+	WriteTime         string `json:"write_time"`
 }
 
 //GenerateReflectValue 实例
@@ -57,4 +58,9 @@ func (p *PackageApp) Next(n interface{}) {
 	}
 
 	app.ApkLastUpdateTime = fi.ModTime().Format("2006-01-02 15:04:05")
+}
+
+func (p *PackageApp) Update() {
+	p.WriteTime = time.Now().Format("2006-01-02 15:04:05")
+	mysql.Exec("Update channel Set status = ?,, write_time = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') Where channel_id = ?", p.Status, p.WriteTime, p.ChannelID)
 }
