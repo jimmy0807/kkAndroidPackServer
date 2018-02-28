@@ -23,6 +23,9 @@ func UploadApkFileHandler(w http.ResponseWriter, r *http.Request) {
 	*/
 	channelID, err := strconv.ParseInt(r.PostFormValue("channelID"), 10, 64)
 	fileName := r.PostFormValue("fileName")
+	hostName := r.PostFormValue("hostName")
+	fmt.Println(hostName)
+
 	r.ParseMultipartForm(32 << 20)
 	file, _, err := r.FormFile("uploadFile")
 	if err != nil {
@@ -67,13 +70,15 @@ func UploadApkFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write([]byte("SUCCESS"))
-	updateTaskStatus(channelID, "success")
+	updateTaskStatus(channelID, "success", hostName)
 }
 
-func updateTaskStatus(channelID int64, status string) {
+func updateTaskStatus(channelID int64, status string, hostName string) {
 	tasks := bean.FetchPackageTaskbyID(channelID)
 	if len(tasks) == 1 {
 		task := tasks[0].(*bean.PackageApp)
 		task.Status = status
+		task.HostName = hostName
+		task.Update()
 	}
 }
