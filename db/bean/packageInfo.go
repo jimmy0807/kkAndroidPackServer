@@ -17,6 +17,8 @@ type PackageApp struct {
 	ChannelID         int64  `json:"channel_id"`
 	WriteTime         string `json:"write_time"`
 	HostName          string `json:"host_name"`
+	StartTime         string `json:"start_time"`
+	FinishTime        string `json:"finish_time"`
 }
 
 //GenerateReflectValue 实例
@@ -63,5 +65,5 @@ func (p *PackageApp) Next(n interface{}) {
 
 func (p *PackageApp) Update() {
 	p.WriteTime = time.Now().Format("2006-01-02 15:04:05")
-	mysql.Exec("Update channel Set status = ?, write_time = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'),host_name = ? Where channel_id = ?", p.Status, p.WriteTime, p.HostName, p.ChannelID)
+	mysql.Exec("Update channel Set status = ?, write_time = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'),host_name = ?, start_time = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), finish_time = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') Where channel_id = ?", p.Status, p.WriteTime, p.HostName, p.StartTime, p.FinishTime, p.ChannelID)
 }

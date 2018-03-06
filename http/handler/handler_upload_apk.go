@@ -8,9 +8,10 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
-const uploadPath = "./"
+var uploadPath = "./"
 
 func UploadApkFileHandler(w http.ResponseWriter, r *http.Request) {
 	//设置文件大小限制
@@ -55,6 +56,13 @@ func UploadApkFileHandler(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	//newPath := filepath.Join(uploadPath, fileName+fileEndings[0])
+
+	dirs := bean.FetchPackDir()
+	if len(dirs) == 1 {
+		dir := dirs[0].(*bean.PackageDir)
+		uploadPath = dir.Dir
+	}
+
 	newPath := filepath.Join(uploadPath, fileName)
 	fmt.Printf("FileType: %s, File: %s\n", filetype, newPath)
 
@@ -79,6 +87,7 @@ func updateTaskStatus(channelID int64, status string, hostName string) {
 		task := tasks[0].(*bean.PackageApp)
 		task.Status = status
 		task.HostName = hostName
+		task.FinishTime = time.Now().Format("2006-01-02 15:04:05")
 		task.Update()
 	}
 }

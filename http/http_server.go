@@ -16,6 +16,7 @@ func HandleHTTPServer(rootPath string) http.Handler {
 
 	r.HandleFunc("/uploadApkFile", handler.UploadApkFileHandler).Methods("POST")
 	r.HandleFunc("/fetchPackTask", handler.HandlerGetPackageList).Methods("GET")
+	r.HandleFunc("/sendError", handler.HandlerError).Methods("POST")
 
 	fs := http.FileServer(http.Dir(uploadPath))
 	//如果是http.hander的话 不用加{rest}
