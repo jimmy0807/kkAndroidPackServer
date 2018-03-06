@@ -11,6 +11,15 @@ func FetchUnPackTask() []interface{} {
 	return apps
 }
 
+func FetchTimeOutBuildingPackTask() []interface{} {
+	sqlString := "select channel_id ChannelID, channel_name ChannelName, status Status from channel where Status = 'building' and TIMESTAMPDIFF(Second, start_time, NOW()) > 150"
+
+	app := new(PackageApp)
+	apps := app.Type(app).QueryList(sqlString)
+
+	return apps
+}
+
 func FetchPackageTaskbyID(channelID int64) []interface{} {
 	sqlString := "select channel_id ChannelID, channel_name ChannelName, status Status, write_time WriteTime, host_name HostName, DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s') StartTime, DATE_FORMAT(finish_time, '%Y-%m-%d %H:%i:%s') FinishTime from channel c where channel_id = " + strconv.FormatInt(channelID, 10)
 

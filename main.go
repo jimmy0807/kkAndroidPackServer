@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"kkAndroidPackServer/config"
+	pack "kkAndroidPackServer/package"
 
 	"kkAndroidPackServer/db/sql"
 	httpServer "kkAndroidPackServer/http"
@@ -15,6 +16,8 @@ import (
 
 func main() {
 	mysql.InitMySQL()
+
+	pack.Instance()
 
 	var stopLock sync.Mutex
 	stop := false

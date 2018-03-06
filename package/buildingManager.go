@@ -1,6 +1,7 @@
 package pack
 
 import (
+	"kkAndroidPackServer/db/bean"
 	"sync"
 	"time"
 )
@@ -24,19 +25,26 @@ func Instance() *Manager {
 }
 
 func startTimer() {
-	timer := time.NewTicker(60 * time.Second)
+	checkTimeOutTask()
+
+	timer := time.NewTicker(10 * time.Second)
 	for {
 		select {
 		case <-timer.C:
-			dealPackage()
+			checkTimeOutTask()
 		}
 	}
-
-	dealPackage()
 }
 
-func dealPackage() {
-	for {
-
+func checkTimeOutTask() {
+	apps := bean.FetchTimeOutBuildingPackTask()
+	if len(apps) > 0 {
+		for _, x := range apps {
+			app := x.(*bean.PackageApp)
+			app.Status = "waiting"
+			app.StartTime = time.Now().Format("2006-01-02 15:04:05")
+			app.FinishTime = time.Now().Format("2006-01-02 15:04:05")
+			app.Update()
+		}
 	}
 }
